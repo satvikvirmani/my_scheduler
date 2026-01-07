@@ -13,6 +13,7 @@ import 'package:my_scheduler/screens/attendance/attendance.dart';
 import 'package:my_scheduler/screens/reports/reports.dart';
 import 'package:my_scheduler/screens/reports/detailed_report_screen.dart';
 import 'package:my_scheduler/screens/settings/settings.dart';
+import 'package:my_scheduler/screens/teams/teams.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   return GoRouter(
@@ -111,6 +112,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/settings',
         builder: (context, state) => const SettingsScreen(),
       ),
+      GoRoute(path: '/teams', builder: (context, state) => TeamsScreen()),
     ],
   );
 });

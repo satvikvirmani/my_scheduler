@@ -4,6 +4,7 @@ import 'package:my_scheduler/screens/home/widgets/hamburger.dart';
 import '../../../core/constants/colors.dart';
 import '../../../core/constants/spacing.dart';
 import 'user_avatar.dart';
+import 'package:go_router/go_router.dart';
 
 class TopBar extends StatelessWidget {
   const TopBar({super.key});
@@ -31,7 +32,10 @@ class TopBar extends StatelessWidget {
             ],
           ),
 
-          const UserAvatar(size: 32), // ✅ REAL AVATAR
+          InkWell(
+            onTap: () => context.push('/teams'),
+            child: const UserAvatar(size: 32),
+          )
         ],
       ),
     );
