@@ -112,7 +112,10 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/settings',
         builder: (context, state) => const SettingsScreen(),
       ),
-      GoRoute(path: '/teams', builder: (context, state) => TeamsScreen()),
+      GoRoute(
+        path: '/teams',
+        builder: (context, state) => const TeamsScreen(),
+      ),
     ],
   );
 });

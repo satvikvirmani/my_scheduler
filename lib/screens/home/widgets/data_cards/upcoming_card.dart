@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../providers/exam_provider.dart';
+import 'package:my_scheduler/core/constants/spacing.dart';
+import 'package:my_scheduler/core/constants/text_styles.dart';
 
 class UpcomingCard extends ConsumerWidget {
   const UpcomingCard({super.key});
@@ -16,27 +18,30 @@ class UpcomingCard extends ConsumerWidget {
     return InkWell(
       onTap: () => context.push('/examination'),
       child: BaseCard(
-        color: AppColors.cyan,
+        color: AppColors.card1,
         child: Column(
           children: [
-            Text('Upcoming'),
-            SizedBox(height: 8),
-
+            Text('Upcoming', style: AppTextStyles.body.copyWith(
+              color: AppColors.body,
+            ),),
+            const SizedBox(height: AppSpacing.labelGap),
             upcomingExams.when(
               loading: () => const CircularProgressIndicator(strokeWidth: 2),
               error: (e, _) => const Text(
                 '—',
-                style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+                style: AppTextStyles.showcase,
               ),
               data: (count) => Text(
                 count.toString(),
-                style: const TextStyle(
-                  fontSize: 48,
-                  fontWeight: FontWeight.bold,
+                style: AppTextStyles.showcase.copyWith(
+                  color: AppColors.body,
                 ),
               ),
             ),
-            Text('exams'),
+            const SizedBox(height: AppSpacing.labelGap),
+            Text('exams', style: AppTextStyles.body.copyWith(
+              color: AppColors.body,
+            ),),
           ],
         ),
       ),

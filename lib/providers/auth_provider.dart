@@ -64,15 +64,15 @@ class AuthRepository {
     );
   }
 
-Future<String> getBranchIdByCode(String branchCode) async {
-  final res = await supabase
-      .from('branches')
-      .select('id')
-      .eq('code', branchCode)
-      .single();
+  Future<String> getBranchIdByCode(String branchCode) async {
+    final res = await supabase
+        .from('branches')
+        .select('id')
+        .eq('code', branchCode)
+        .single();
 
-  return res['id'] as String;
-}
+    return res['id'] as String;
+  }
 
   /// -----------------------------
   /// Update / Insert Profile
@@ -109,6 +109,17 @@ Future<String> getBranchIdByCode(String branchCode) async {
     await GoogleSignIn.instance.signOut();
   }
 
+  Future<String> getFullName() async {
+    final user = supabase.auth.currentUser!;
+    final response = await supabase
+        .from('profiles')
+        .select('full_name')
+        .eq('id', user.id)
+        .single();
+
+    return response['full_name'] as String;
+  }
+
   /// -----------------------------
   /// Helpers
   /// -----------------------------
@@ -119,4 +130,9 @@ Future<String> getBranchIdByCode(String branchCode) async {
 /// 🔹 Provider
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
   return AuthRepository();
+});
+
+final fullNameProvider = FutureProvider<String>((ref) async {
+  final repo = ref.read(authRepositoryProvider);
+  return repo.getFullName(); // 👈 implement this in repo
 });

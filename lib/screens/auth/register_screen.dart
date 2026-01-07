@@ -1,5 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'package:sign_in_button/sign_in_button.dart';
+
+// Constants
+import 'package:my_scheduler/core/constants/spacing.dart';
+import 'package:my_scheduler/core/constants/colors.dart';
+import 'package:my_scheduler/core/constants/text_styles.dart';
+
+import 'package:my_scheduler/widgets/custom_app_bar.dart';
+import 'package:my_scheduler/widgets/text_input_field.dart';
+
 import 'package:go_router/go_router.dart';
 import 'package:my_scheduler/providers/auth_provider.dart';
 
@@ -19,7 +30,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   Future<void> _register() async {
     setState(() => _isLoading = true);
     try {
-      await ref.read(authRepositoryProvider).signUpEmail(
+      await ref
+          .read(authRepositoryProvider)
+          .signUpEmail(
             email: _emailController.text.trim(),
             password: _passwordController.text.trim(),
             fullName: _fullNameController.text.trim(),
@@ -39,8 +52,24 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Error: $e'),
-            backgroundColor: Colors.red,
+            backgroundColor: AppColors.danger,
           ),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _googleSignIn() async {
+    setState(() => _isLoading = true);
+    try {
+      await ref.read(authRepositoryProvider).signInWithGoogle();
+      // Router will handle redirect
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: $e'), backgroundColor: AppColors.danger),
         );
       }
     } finally {
@@ -59,41 +88,89 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Register')),
+      appBar: CustomAppBar(title: 'Register'),
       body: Center(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24.0),
+          padding: const EdgeInsets.all(AppSpacing.pagePadding),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              TextField(
+              TextInputField(
                 controller: _fullNameController,
-                decoration: const InputDecoration(labelText: 'Full Name'),
+                label: 'Full Name',
+                placeholder: 'Enter your full name',
               ),
-              const SizedBox(height: 16),
-              TextField(
+              const SizedBox(height: AppSpacing.gap),
+              TextInputField(
                 controller: _emailController,
-                decoration: const InputDecoration(labelText: 'Email'),
+                label: 'Email',
+                placeholder: 'Enter your email',
                 keyboardType: TextInputType.emailAddress,
               ),
-              const SizedBox(height: 16),
-              TextField(
+              const SizedBox(height: AppSpacing.gap),
+              TextInputField(
                 controller: _passwordController,
-                decoration: const InputDecoration(labelText: 'Password'),
+                label: 'Password',
+                placeholder: 'Enter your password',
                 obscureText: true,
               ),
-              const SizedBox(height: 24),
-              ElevatedButton(
+              const SizedBox(height: AppSpacing.gap),
+              FilledButton(
+                style: FilledButton.styleFrom(
+                  elevation: 0,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.fieldXPadding + 5,
+                    vertical: AppSpacing.fieldYPadding + 5,
+                  ),
+                  backgroundColor: AppColors.accent,
+                  foregroundColor: Colors.white,
+
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(AppSpacing.radius),
+                  ),
+                ),
                 onPressed: _isLoading ? null : _register,
                 child: _isLoading
-                    ? const CircularProgressIndicator()
-                    : const Text('Register'),
+                    ? const SizedBox(
+                        height: 24,
+                        width: 24,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: AppColors.light,
+                        ),
+                      )
+                    : const Text('Register', style: AppTextStyles.body),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSpacing.gap),
+              SignInButton(
+                Buttons.google,
+                text: 'Sign Up with Google',
+                textStyle: AppTextStyles.body,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.fieldXPadding,
+                  vertical: AppSpacing.fieldYPadding,
+                ),
+                elevation: 2,
+                onPressed: () => _googleSignIn(),
+              ),
+              const SizedBox(height: AppSpacing.gap),
               TextButton(
+                style: FilledButton.styleFrom(
+                  elevation: 0,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.fieldXPadding + 5,
+                    vertical: AppSpacing.fieldYPadding + 5,
+                  ),
+
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(AppSpacing.radius),
+                  ),
+                ),
+
                 onPressed: () => context.go('/login'),
-                child: const Text('Already have an account? Login'),
+
+                child: const Text('Already have an account? Login', style: AppTextStyles.body),
               ),
             ],
           ),

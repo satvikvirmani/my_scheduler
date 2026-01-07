@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/colors.dart';
+import '../../../core/constants/spacing.dart';
 import '../home_screen.dart';
 
 class Hamburger extends StatelessWidget {
@@ -14,24 +15,25 @@ class Hamburger extends StatelessWidget {
           homeScaffoldKey.currentState?.openDrawer();
         },
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              width: 24,
+              width: 20,
               height: 2,
               decoration: BoxDecoration(
-                color: AppColors.textPrimary,
-                borderRadius: BorderRadius.circular(2),
+                color: AppColors.body,
+                borderRadius: BorderRadius.circular(AppSpacing.radius),
               ),
             ),
-            const SizedBox(height: 6),
+            const SizedBox(height: 4),
             Container(
-              width: 18,
+              width: 10,
               height: 2,
               decoration: BoxDecoration(
-                color: AppColors.textPrimary,
-                borderRadius: BorderRadius.circular(2),
+                color: AppColors.body,
+                borderRadius: BorderRadius.circular(AppSpacing.radius),
               ),
             ),
           ],

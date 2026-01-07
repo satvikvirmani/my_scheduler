@@ -1,5 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'package:sign_in_button/sign_in_button.dart';
+
+// Constants
+import 'package:my_scheduler/core/constants/spacing.dart';
+import 'package:my_scheduler/core/constants/colors.dart';
+import 'package:my_scheduler/core/constants/text_styles.dart';
+
+import 'package:my_scheduler/widgets/text_input_field.dart';
+import 'package:my_scheduler/widgets/custom_app_bar.dart';
+
 import 'package:go_router/go_router.dart';
 import 'package:my_scheduler/providers/auth_provider.dart';
 
@@ -18,7 +29,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   Future<void> _signIn() async {
     setState(() => _isLoading = true);
     try {
-      await ref.read(authRepositoryProvider).signInEmail(
+      await ref
+          .read(authRepositoryProvider)
+          .signInEmail(
             email: _emailController.text.trim(),
             password: _passwordController.text.trim(),
           );
@@ -26,10 +39,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Error: $e'),
-            backgroundColor: Colors.red,
-          ),
+          SnackBar(content: Text('Error: $e'), backgroundColor: AppColors.danger),
         );
       }
     } finally {
@@ -45,10 +55,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Error: $e'),
-            backgroundColor: Colors.red,
-          ),
+          SnackBar(content: Text('Error: $e'), backgroundColor: AppColors.danger),
         );
       }
     } finally {
@@ -66,42 +73,84 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Login')),
+      appBar: CustomAppBar(title: 'Login'),
       body: Center(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24.0),
+          padding: const EdgeInsets.all(AppSpacing.pagePadding),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              TextField(
+              TextInputField(
                 controller: _emailController,
-                decoration: const InputDecoration(labelText: 'Email'),
+                label: 'Email',
                 keyboardType: TextInputType.emailAddress,
+                placeholder: 'Enter your email',
               ),
-              const SizedBox(height: 16),
-              TextField(
+              const SizedBox(height: AppSpacing.gap),
+              TextInputField(
                 controller: _passwordController,
-                decoration: const InputDecoration(labelText: 'Password'),
+                label: 'Password',
                 obscureText: true,
+                placeholder: 'Enter your password',
               ),
-              const SizedBox(height: 24),
-              ElevatedButton(
+              const SizedBox(height: AppSpacing.gap),
+              FilledButton(
+                style: FilledButton.styleFrom(
+                  elevation: 0,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.fieldXPadding + 5,
+                    vertical: AppSpacing.fieldYPadding + 5,
+                  ),
+                  backgroundColor: AppColors.accent,
+                  foregroundColor: Colors.white,
+
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(AppSpacing.radius),
+                  ),
+                ),
+
                 onPressed: _isLoading ? null : _signIn,
+
                 child: _isLoading
-                    ? const CircularProgressIndicator()
-                    : const Text('Login'),
+                    ? const SizedBox(
+                        height: 24,
+                        width: 24,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: AppColors.light,
+                        ),
+                      )
+                    : const Text('Login', style: AppTextStyles.body),
               ),
-              const SizedBox(height: 16),
-              OutlinedButton.icon(
-                onPressed: _isLoading ? null : _googleSignIn,
-                icon: const Icon(Icons.login),
-                label: const Text('Sign in with Google'),
+              const SizedBox(height: AppSpacing.gap),
+              SignInButton(
+                Buttons.google,
+                textStyle: AppTextStyles.body,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.fieldXPadding,
+                  vertical: AppSpacing.fieldYPadding,
+                ),
+                elevation: 2,
+                onPressed: () => _googleSignIn(),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSpacing.gap),
               TextButton(
+                style: FilledButton.styleFrom(
+                  elevation: 0,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.fieldXPadding + 5,
+                    vertical: AppSpacing.fieldYPadding + 5,
+                  ),
+
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(AppSpacing.radius),
+                  ),
+                ),
+
                 onPressed: () => context.go('/register'),
-                child: const Text('Don\'t have an account? Register'),
+
+                child: const Text('Don\'t have an account? Register', style: AppTextStyles.body),
               ),
             ],
           ),

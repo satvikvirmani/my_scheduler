@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../providers/auth_provider.dart';
+import 'package:my_scheduler/providers/auth_provider.dart';
+import 'package:my_scheduler/widgets/dropdown_input_field.dart';
+import 'package:my_scheduler/widgets/text_input_field.dart';
+import 'package:my_scheduler/widgets/custom_app_bar.dart';
+
+import 'package:my_scheduler/core/constants/colors.dart';
+import 'package:my_scheduler/core/constants/spacing.dart';
+import 'package:my_scheduler/core/constants/text_styles.dart';
 
 class ProfileSetupScreen extends ConsumerStatefulWidget {
   const ProfileSetupScreen({super.key});
@@ -26,8 +33,58 @@ class _ProfileSetupScreenState extends ConsumerState<ProfileSetupScreen> {
     'CE': 'Civil Engineering',
   };
 
-  final List<String> _sections = ['A', 'B', 'C'];
-  final List<String> _subsections = List.generate(12, (i) => '${i + 1}');
+  /// ✅ Branch → Sections
+  final Map<String, List<String>> branchSections = {
+    'CS': ['A', 'B'],
+    'IT': ['A', 'B', 'C'],
+    'ME': ['A'],
+    'CE': ['A', 'B'],
+  };
+
+  /// ✅ Section → Subsections
+  final Map<String, List<String>> sectionSubsections = {
+    'CS-A': ['1', '2', '3', '4'],
+    'CS-B': ['1', '2', '3'],
+    'IT-A': ['1', '2'],
+    'IT-B': ['1', '2', '3'],
+    'IT-C': ['1'],
+    'ME-A': ['1', '2', '3', '4', '5'],
+    'CE-A': ['1', '2'],
+    'CE-B': ['1', '2', '3'],
+  };
+
+  /// 🟢 Dynamic options
+  List<String> availableSections = [];
+  List<String> availableSubsections = [];
+
+  // -----------------------------
+  // 🔄 Handlers
+  // -----------------------------
+
+  void onBranchChanged(String? value) {
+    setState(() {
+      _selectedBranch = value;
+      _selectedSection = null;
+      _selectedSubsection = null;
+
+      availableSections = branchSections[value] ?? [];
+      availableSubsections = [];
+    });
+  }
+
+  void onSectionChanged(String? value) {
+    setState(() {
+      _selectedSection = value;
+      _selectedSubsection = null;
+
+      final key = '$_selectedBranch-$value';
+      availableSubsections = sectionSubsections[key] ?? [];
+    });
+  }
+
+  // -----------------------------
+  // Existing methods unchanged
+  // -----------------------------
 
   Future<void> _saveProfile() async {
     if (_selectedBranch == null ||
@@ -53,7 +110,7 @@ class _ProfileSetupScreenState extends ConsumerState<ProfileSetupScreen> {
       final branchId = await ref
           .read(authRepositoryProvider)
           .getBranchIdByCode(_selectedBranch!);
-      // Get branch_id from DB using branch code
+
       await ref
           .read(authRepositoryProvider)
           .updateProfile(
@@ -67,7 +124,10 @@ class _ProfileSetupScreenState extends ConsumerState<ProfileSetupScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e'), backgroundColor: Colors.red),
+          SnackBar(
+            content: Text('Error: $e'),
+            backgroundColor: AppColors.danger,
+          ),
         );
       }
     } finally {
@@ -86,15 +146,22 @@ class _ProfileSetupScreenState extends ConsumerState<ProfileSetupScreen> {
     super.dispose();
   }
 
+  // -----------------------------
+  // UI
+  // -----------------------------
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Complete Your Profile'),
-        actions: [
-          IconButton(icon: const Icon(Icons.logout), onPressed: _signOut),
-        ],
-      ),
+appBar: CustomAppBar(
+  title: 'Complete Your Profile',
+  actions: [
+    IconButton(
+      icon: const Icon(Icons.logout),
+      onPressed: _signOut,
+    ),
+  ],
+),
       body: Padding(
         padding: const EdgeInsets.all(24),
         child: Column(
@@ -104,80 +171,79 @@ class _ProfileSetupScreenState extends ConsumerState<ProfileSetupScreen> {
             const Text(
               'Set up your academic profile',
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: AppTextStyles.bodyEmphasis,
             ),
+            const SizedBox(height: AppSpacing.gap),
 
-            const SizedBox(height: 32),
-
-            // 🏫 Branch
-            DropdownButtonFormField<String>(
+            DropdownInputField<String>(
+              label: 'Branch',
+              placeholder: 'Select branch',
               value: _selectedBranch,
-              decoration: const InputDecoration(
-                labelText: 'Branch',
-                border: OutlineInputBorder(),
-              ),
               items: _branches.entries
                   .map(
                     (e) => DropdownMenuItem(value: e.key, child: Text(e.value)),
                   )
                   .toList(),
-              onChanged: (v) => setState(() => _selectedBranch = v),
+              onChanged: onBranchChanged,
             ),
 
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.gap),
 
-            // 📘 Section
-            DropdownButtonFormField<String>(
+            DropdownInputField<String>(
+              label: 'Section',
+              placeholder: 'Select section',
               value: _selectedSection,
-              decoration: const InputDecoration(
-                labelText: 'Section',
-                border: OutlineInputBorder(),
-              ),
-              items: _sections
+              items: availableSections
                   .map((s) => DropdownMenuItem(value: s, child: Text(s)))
                   .toList(),
-              onChanged: (v) => setState(() => _selectedSection = v),
+              onChanged: availableSections.isEmpty ? null : onSectionChanged,
             ),
 
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.gap),
 
-            // 📗 Subsection
-            DropdownButtonFormField<String>(
+            // 📗 Subsection (depends on section)
+            DropdownInputField<String>(
+              label: 'Subsection',
+              placeholder: 'Select subsection',
               value: _selectedSubsection,
-              decoration: const InputDecoration(
-                labelText: 'Subsection',
-                border: OutlineInputBorder(),
-              ),
-              items: _subsections
+              items: availableSubsections
                   .map((s) => DropdownMenuItem(value: s, child: Text(s)))
                   .toList(),
-              onChanged: (v) => setState(() => _selectedSubsection = v),
+              onChanged: availableSubsections.isEmpty
+                  ? null
+                  : (v) => setState(() => _selectedSubsection = v),
             ),
 
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.gap),
 
             // 📞 Phone
-            TextField(
+            TextInputField(
               controller: _phoneController,
               keyboardType: TextInputType.phone,
-              decoration: const InputDecoration(
-                labelText: 'Phone Number',
-                border: OutlineInputBorder(),
+              label: 'Phone Number',
+            ),
+
+            const SizedBox(height: AppSpacing.gap),
+
+              FilledButton(
+                style: FilledButton.styleFrom(
+                  elevation: 0,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.fieldXPadding + 5,
+                    vertical: AppSpacing.fieldYPadding + 5,
+                  ),
+                  backgroundColor: AppColors.accent,
+                  foregroundColor: Colors.white,
+
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(AppSpacing.radius),
+                  ),
+                ),
+
+                onPressed: _isLoading ? null : _saveProfile,
+
+                child: const Text('Save & Continue', style: AppTextStyles.body),
               ),
-            ),
-
-            const SizedBox(height: 32),
-
-            ElevatedButton(
-              onPressed: _isLoading ? null : _saveProfile,
-              child: _isLoading
-                  ? const SizedBox(
-                      height: 20,
-                      width: 20,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    )
-                  : const Text('Save & Continue'),
-            ),
           ],
         ),
       ),

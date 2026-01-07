@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:my_scheduler/core/constants/colors.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_scheduler/router.dart';
+
+
+import 'package:my_scheduler/core/constants/text_styles.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,7 +35,15 @@ class MyApp extends ConsumerWidget {
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       title: 'myScheduler',
-      theme: ThemeData(primarySwatch: Colors.blue),
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: AppColors.accent),
+        scaffoldBackgroundColor: AppColors.superlight,
+        textTheme: TextTheme(
+          bodyLarge: AppTextStyles.body,
+          bodyMedium: AppTextStyles.body,
+          bodySmall: AppTextStyles.body,
+        ),
+      ),
       routerConfig: router,
     );
   }

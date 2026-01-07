@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'data_cards/attendence_card.dart';
 import 'data_cards/team_card.dart';
 import 'data_cards/upcoming_card.dart';
+import 'package:my_scheduler/core/constants/spacing.dart';
 
 class DataCardsSection extends StatelessWidget {
   const DataCardsSection({super.key});
@@ -18,12 +19,12 @@ class DataCardsSection extends StatelessWidget {
               child: Column(
                 children: [
                   UpcomingCard(),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: AppSpacing.gap),
                   AttendanceCard(),
                 ],
               ),
             ),
-            const SizedBox(width: 16),
+            const SizedBox(width: AppSpacing.gap),
             Expanded(child: TeamsCard()),
           ],
         ),

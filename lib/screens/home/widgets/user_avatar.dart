@@ -62,18 +62,15 @@ class _UserAvatarState extends State<UserAvatar> {
         height: size,
         child: ClipOval(
           child: _loading
-              ? Container(
-                  color: AppColors.mint,
-                )
+              ? Container(color: AppColors.mint)
               : _avatarUrl != null
-                  ? Image.network(
-                      Uri.encodeFull(_avatarUrl!),
-                      fit: BoxFit.cover,
-                      alignment: Alignment.center,
-                      errorBuilder: (_, __, ___) =>
-                          _placeholder(),
-                    )
-                  : _placeholder(),
+              ? Image.network(
+                  Uri.encodeFull(_avatarUrl!),
+                  fit: BoxFit.cover,
+                  alignment: Alignment.center,
+                  errorBuilder: (_, __, ___) => _placeholder(),
+                )
+              : _placeholder(),
         ),
       ),
     );
@@ -82,10 +79,7 @@ class _UserAvatarState extends State<UserAvatar> {
   Widget _placeholder() {
     return Container(
       color: AppColors.mint,
-      child: Icon(
-        Icons.person,
-        size: widget.size * 0.6,
-      ),
+      child: Icon(Icons.person, size: widget.size * 0.6),
     );
   }
 }

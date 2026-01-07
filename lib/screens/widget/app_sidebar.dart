@@ -10,7 +10,7 @@ class AppSidebar extends StatelessWidget {
     final double drawerWidth = MediaQuery.of(context).size.width * 0.5;
 
     return Drawer(
-      width: drawerWidth, // 👈 half screen width
+      width: drawerWidth,
       backgroundColor: Colors.white,
       child: SafeArea(
         child: Column(
