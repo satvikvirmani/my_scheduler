@@ -74,7 +74,7 @@ class AppTextStyles {
   );
 
   static const chart = TextStyle(
-    fontSize: 6,
+    fontSize: 8,
     fontWeight: FontWeight.w300,
     height: 1.5,
   );

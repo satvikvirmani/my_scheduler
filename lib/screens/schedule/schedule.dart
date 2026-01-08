@@ -172,7 +172,10 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
                     );
                   }
 
-                  return TimelineSection(events: events);
+                  return Padding(
+                    padding: const EdgeInsets.all(AppSpacing.pagePadding),
+                    child: TimelineSection(events: events)
+                  );
                 },
               ),
             ],

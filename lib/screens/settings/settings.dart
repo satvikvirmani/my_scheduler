@@ -6,6 +6,7 @@ import '../../core/constants/spacing.dart';
 import 'widgets/avatar_section.dart';
 import 'widgets/profile_form.dart';
 import 'widgets/settings_footer.dart';
+import '../../widgets/custom_app_bar.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -82,15 +83,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
     }
 
     return Scaffold(
+      appBar: CustomAppBar(title: 'Settings'),
       body: SafeArea(
-        child: Padding(
+        child: SingleChildScrollView(
           padding: const EdgeInsets.all(AppSpacing.pagePadding),
           child: Column(
             children: [
               AvatarSection(avatarUrl: avatarUrl),
-
-              const SizedBox(height: 32),
-
+              const SizedBox(height: AppSpacing.gap),
               ProfileForm(
                 nameController: _nameController,
                 phoneController: _phoneController,
@@ -98,9 +98,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 saving: _saving,
                 onSave: _updateProfile,
               ),
-
-              const Spacer(), // ✅ SAFE here (parent has bounded height)
-
+              // const Spacer(),
               SettingsFooter(onSignOut: _signOut),
             ],
           ),

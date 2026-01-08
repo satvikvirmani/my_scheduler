@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/spacing.dart';
+import '../../../core/constants/colors.dart';
+import '../../../core/constants/text_styles.dart';
 import '../../../models/subject_attendance.dart';
 import '../../../core/utils/color_cycler.dart';
 
@@ -16,7 +18,7 @@ class SubjectAttendanceCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(AppSpacing.pagePadding),
       decoration: BoxDecoration(
         color: ColorCycler.byIndex(index),
         borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
@@ -26,25 +28,13 @@ class SubjectAttendanceCard extends StatelessWidget {
         children: [
           // Subject name
           Text(
-            subject.subjectName, // ✅ FIXED
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
+            subject.subjectName,
+            style: AppTextStyles.body.copyWith(
+              color: AppColors.body,
             ),
           ),
 
-          const SizedBox(height: 4),
-
-          // Subject code (optional but useful)
-          Text(
-            subject.subjectCode,
-            style: const TextStyle(
-              fontSize: 12,
-              color: Colors.black54,
-            ),
-          ),
-
-          const SizedBox(height: 12),
+          const SizedBox(height: AppSpacing.labelGap),
 
           Row(
             children: [
@@ -53,9 +43,15 @@ class SubjectAttendanceCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Total: ${subject.total}'),
-                    Text('Attended: ${subject.attended}'),
-                    Text('Missed: ${subject.missed}'),
+                    Text('Total: ${subject.total}', style: AppTextStyles.assist.copyWith(
+                      color: AppColors.subHeading,
+                    )),
+                    Text('Attended: ${subject.attended}', style: AppTextStyles.assist.copyWith(
+                      color: AppColors.subHeading,
+                    )),
+                    Text('Missed: ${subject.missed}', style: AppTextStyles.assist.copyWith(
+                      color: AppColors.subHeading,
+                    )),
                   ],
                 ),
               ),
@@ -65,8 +61,12 @@ class SubjectAttendanceCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Cancelled: ${subject.cancelled}'),
-                    Text('Extra: ${subject.extra}'),
+                    Text('Cancelled: ${subject.cancelled}', style: AppTextStyles.assist.copyWith(
+                      color: AppColors.subHeading,
+                    )),
+                    Text('Extra: ${subject.extra}', style: AppTextStyles.assist.copyWith(
+                      color: AppColors.subHeading,
+                    )),
                   ],
                 ),
               ),

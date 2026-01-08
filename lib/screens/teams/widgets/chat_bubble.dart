@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:my_scheduler/core/constants/colors.dart';
+import 'package:my_scheduler/core/constants/spacing.dart';
+import 'package:my_scheduler/core/constants/text_styles.dart';
 
 class ChatBubble extends StatelessWidget {
   final String message;
@@ -17,26 +20,25 @@ class ChatBubble extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bgColor = isMe ? color : Colors.grey.shade200;
-    final textColor = isMe ? Colors.white : Colors.black87;
 
     return Align(
-      alignment: isMe ? Alignment.centerRight : Alignment.centerLeft, // ✅ fixed
+      alignment: isMe ? Alignment.centerLeft : Alignment.centerRight,
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 280),
         child: Container(
           margin: const EdgeInsets.symmetric(vertical: 4),
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          padding: const EdgeInsets.all(AppSpacing.cardPadding),
           decoration: BoxDecoration(
             color: bgColor,
             borderRadius: BorderRadius.only(
-              topLeft: const Radius.circular(14),
-              topRight: const Radius.circular(14),
+              topLeft: const Radius.circular(AppSpacing.radius),
+              topRight: const Radius.circular(AppSpacing.radius),
               bottomLeft: isMe
-                  ? const Radius.circular(14)
-                  : const Radius.circular(2),
-              bottomRight: isMe
                   ? const Radius.circular(2)
-                  : const Radius.circular(14),
+                  : const Radius.circular(AppSpacing.radius),
+              bottomRight: isMe
+                  ? const Radius.circular(AppSpacing.radius)
+                  : const Radius.circular(2),
             ),
           ),
           child: Column(
@@ -46,10 +48,9 @@ class ChatBubble extends StatelessWidget {
               // 💬 Message
               Text(
                 message,
-                style: TextStyle(
-                  color: textColor,
-                  fontSize: 14,
-                ),
+                style: AppTextStyles.assist.copyWith(
+                  color: AppColors.body,
+                )
               ),
 
               // ⏰ Time (optional)
@@ -57,9 +58,8 @@ class ChatBubble extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   _formatTime(time!),
-                  style: TextStyle(
-                    fontSize: 10,
-                    color: textColor.withOpacity(0.7),
+                  style: AppTextStyles.messageTime.copyWith(
+                    color: AppColors.body,
                   ),
                 ),
               ],
@@ -71,9 +71,8 @@ class ChatBubble extends StatelessWidget {
   }
 
   String _formatTime(DateTime t) {
-    final hour = t.hour % 12 == 0 ? 12 : t.hour % 12;
+    final hour = t.hour;
     final minute = t.minute.toString().padLeft(2, '0');
-    final period = t.hour >= 12 ? 'PM' : 'AM';
-    return '$hour:$minute $period';
+    return '$hour:$minute';
   }
 }

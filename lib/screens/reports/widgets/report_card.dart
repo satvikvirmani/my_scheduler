@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:my_scheduler/core/constants/text_styles.dart';
 import '../../../models/report.dart';
+import '../../../../core/constants/spacing.dart';
+import '../../../../core/constants/colors.dart';
 
 class ReportCard extends StatelessWidget {
   final Report report;
@@ -13,10 +16,10 @@ class ReportCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(AppSpacing.pagePadding),
       decoration: BoxDecoration(
         color: report.color,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppSpacing.radius),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -27,16 +30,25 @@ class ReportCard extends StatelessWidget {
             children: [
               Text(
                 report.semesterName,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
+                style: AppTextStyles.body.copyWith(
+                  color: AppColors.body,
                 ),
               ),
-              Text(
-                '${report.gpa.toStringAsFixed(2)} GPA',
-                style: const TextStyle(
-                  fontWeight: FontWeight.w600,
-                ),
+              Row(
+                children: [
+                  Text(
+                    report.gpa.toStringAsFixed(2),
+                    style: AppTextStyles.bodyEmphasis.copyWith(
+                      color: AppColors.body,
+                    ),
+                  ),
+                  Text(
+                    ' GPA',
+                    style: AppTextStyles.body.copyWith(
+                      color: AppColors.subHeading,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
@@ -44,7 +56,9 @@ class ReportCard extends StatelessWidget {
           const SizedBox(height: 12),
 
           _buildLink(context, 'Mid Semester 1', 'mid_sem_1'),
+          const SizedBox(height: AppSpacing.labelGap),
           _buildLink(context, 'Mid Semester 2', 'mid_sem_2'),
+          const SizedBox(height: AppSpacing.labelGap),
           _buildLink(context, 'End Semester', 'end_sem'),
         ],
       ),
@@ -64,16 +78,13 @@ class ReportCard extends StatelessWidget {
           },
         );
       },
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 6),
-        child: Text(
+      child: Text(
           category,
-          style: const TextStyle(
-            fontSize: 14,
+          style: AppTextStyles.assist.copyWith(
+            color: AppColors.subHeading,
             decoration: TextDecoration.underline,
           ),
         ),
-      ),
     );
   }
 }

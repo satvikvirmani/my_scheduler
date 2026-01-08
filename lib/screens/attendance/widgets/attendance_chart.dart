@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:my_scheduler/core/constants/spacing.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import '../../../core/constants/colors.dart';
 import '../../../core/constants/text_styles.dart';
-import './data_cards/base_card.dart';
 
-class AttendanceChart extends StatelessWidget {
+class AttendanceChartScreen extends StatelessWidget {
   final double attendance; // value from 0.0 to 1.0
 
-  const AttendanceChart({super.key, required this.attendance});
+  const AttendanceChartScreen({super.key, required this.attendance});
 
   @override
   Widget build(BuildContext context) {
@@ -20,19 +20,23 @@ class AttendanceChart extends StatelessWidget {
       ),
     ];
 
-    return BaseCard(
-      color: AppColors.card4,
+    return Container(
+      padding: const EdgeInsets.all(AppSpacing.cardPadding),
+      decoration: BoxDecoration(
+        color: AppColors.card2,
+        borderRadius: BorderRadius.circular(AppSpacing.radius),
+      ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            'Overall Attendance',
+            'Total',
             style: AppTextStyles.body.copyWith(
               color: AppColors.body,
             ),
           ),
 
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSpacing.gap),
 
           SizedBox(
             width: 120,

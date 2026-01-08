@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import 'package:my_scheduler/core/constants/colors.dart';
+import 'package:my_scheduler/core/constants/text_styles.dart';
+
 class SettingsFooter extends StatelessWidget {
   final VoidCallback onSignOut;
 
@@ -14,15 +17,15 @@ class SettingsFooter extends StatelessWidget {
 
         Align(
           alignment: Alignment.centerLeft,
-          child: TextButton(
-            onPressed: onSignOut,
-            child: const Text(
+          child: ListTile(
+            contentPadding: EdgeInsets.zero,
+            horizontalTitleGap: 0,
+            dense: true,
+            title: Text(
               'Sign out',
-              style: TextStyle(
-                color: Colors.red,
-                fontWeight: FontWeight.bold,
-              ),
+              style: AppTextStyles.body.copyWith(color: AppColors.danger),
             ),
+            onTap: onSignOut,
           ),
         ),
       ],

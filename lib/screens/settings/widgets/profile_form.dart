@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:my_scheduler/core/constants/spacing.dart';
+import 'package:my_scheduler/widgets/text_input_field.dart';
+import 'package:my_scheduler/core/constants/colors.dart';
+import 'package:my_scheduler/core/constants/text_styles.dart';
 
 class ProfileForm extends StatelessWidget {
   final TextEditingController nameController;
@@ -18,70 +22,82 @@ class ProfileForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        TextField(
-          controller: nameController,
-          decoration: const InputDecoration(
-            labelText: 'Name',
-            border: OutlineInputBorder(),
-          ),
+    return SafeArea(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(vertical: AppSpacing.pagePadding),
+        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            TextInputField(controller: nameController, label: 'Name'),
+
+            const SizedBox(height: AppSpacing.labelGap),
+
+            TextInputField(
+              enabled: false,
+              controller: TextEditingController(text: email),
+              label: 'Email',
+            ),
+
+            const SizedBox(height: AppSpacing.labelGap),
+
+            TextInputField(
+              controller: phoneController,
+              keyboardType: TextInputType.phone,
+              label: 'Phone Number',
+            ),
+
+            const SizedBox(height: AppSpacing.labelGap),
+
+              FilledButton(
+                style: FilledButton.styleFrom(
+                  elevation: 0,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.fieldXPadding + 5,
+                    vertical: AppSpacing.fieldYPadding + 5,
+                  ),
+                  backgroundColor: AppColors.accent,
+                  foregroundColor: Colors.white,
+
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(AppSpacing.radius),
+                  ),
+                ),
+
+                onPressed: saving ? null : onSave,
+
+                child: saving
+                    ? const SizedBox(
+                        height: 24,
+                        width: 24,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: AppColors.light,
+                        ),
+                      )
+                    : const Text('Update', style: AppTextStyles.body),
+              ),
+
+            const Divider(),
+
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              horizontalTitleGap: 0,
+              dense: true,
+              title: Text('Support', style: AppTextStyles.body.copyWith(color: AppColors.subHeading)),
+              onTap: () {},
+            ),
+
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              horizontalTitleGap: 0,
+              dense: true,
+              title: Text('FAQs', style: AppTextStyles.body.copyWith(color: AppColors.subHeading)),
+              onTap: () {},
+            ),
+          ],
         ),
-
-        const SizedBox(height: 16),
-
-        TextField(
-          enabled: false,
-          controller: TextEditingController(text: email),
-          decoration: const InputDecoration(
-            labelText: 'Email',
-            border: OutlineInputBorder(),
-          ),
-        ),
-
-        const SizedBox(height: 16),
-
-        TextField(
-          controller: phoneController,
-          keyboardType: TextInputType.phone,
-          decoration: const InputDecoration(
-            labelText: 'Phone Number',
-            border: OutlineInputBorder(),
-          ),
-        ),
-
-        const SizedBox(height: 24),
-
-        SizedBox(
-          width: double.infinity,
-          child: ElevatedButton(
-            onPressed: saving ? null : onSave,
-            child: saving
-                ? const SizedBox(
-                    height: 20,
-                    width: 20,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  )
-                : const Text('Update'),
-          ),
-        ),
-
-        const Divider(),
-
-        ListTile(
-          contentPadding: EdgeInsets.zero,
-          title: const Text('Support'),
-          trailing: const Icon(Icons.chevron_right),
-          onTap: () {},
-        ),
-
-        ListTile(
-          contentPadding: EdgeInsets.zero,
-          title: const Text('FAQs'),
-          trailing: const Icon(Icons.chevron_right),
-          onTap: () {},
-        ),
-      ],
+      ),
     );
   }
 }

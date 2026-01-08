@@ -10,6 +10,10 @@ class TextInputField extends StatelessWidget {
   final bool obscureText;
   final IconData? prefixIcon;
   final String? placeholder;
+final ValueChanged<String>? onSubmitted;
+final TextInputAction textInputAction;
+final int maxLines;
+final bool enabled;
 
   const TextInputField({
     super.key,
@@ -19,6 +23,10 @@ class TextInputField extends StatelessWidget {
     this.obscureText = false,
     this.prefixIcon,
     this.placeholder,
+    this.onSubmitted,
+    this.textInputAction = TextInputAction.done,
+    this.maxLines = 1,
+    this.enabled = true,
   });
 
   @override
@@ -27,19 +35,24 @@ class TextInputField extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // 🔹 Label Above
-        Text(
-          label,
-          style: AppTextStyles.assist.copyWith(
-            color: AppColors.subHeading,
+        if (label.isNotEmpty) ...[
+          Text(
+            label,
+            style: AppTextStyles.assist.copyWith(
+              color: AppColors.subHeading,
+            ),
           ),
-        ),
-
-        const SizedBox(height: AppSpacing.labelGap),
+          const SizedBox(height: AppSpacing.labelGap),
+        ],
 
         TextField(
           controller: controller,
           keyboardType: keyboardType,
           obscureText: obscureText,
+            onSubmitted: onSubmitted,
+            enabled: enabled,
+            textInputAction: textInputAction, // ✅
+  maxLines: maxLines,              
           decoration: InputDecoration(
             hintText: placeholder,
             prefixIcon: prefixIcon != null ? Icon(prefixIcon) : null,

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:my_scheduler/core/constants/spacing.dart';
 import '../../core/constants/colors.dart';
 import 'package:go_router/go_router.dart';
+import '../../core/constants/text_styles.dart';
 
 class AppSidebar extends StatelessWidget {
   const AppSidebar({super.key});
@@ -11,69 +13,89 @@ class AppSidebar extends StatelessWidget {
 
     return Drawer(
       width: drawerWidth,
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.superlight,
+      elevation: 0,
       child: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // App Name
-            const Padding(
-              padding: EdgeInsets.all(20),
-              child: Text(
-                'myScheduler',
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.textPrimary,
-                ),
+        child: Container(
+          padding: const EdgeInsets.all(AppSpacing.pagePadding),
+          decoration: const BoxDecoration(
+            color: AppColors.superlight,
+            borderRadius: BorderRadius.zero,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'myScheduler',
+                    style: AppTextStyles.accent.copyWith(color: AppColors.body),
+                  ),
+                  const SizedBox(width: 6),
+                  Baseline(
+                    baseline: 16,
+                    baselineType: TextBaseline.alphabetic,
+                    child: CircleAvatar(
+                      radius: 4,
+                      backgroundColor: AppColors.accent,
+                    ),
+                  ),
+                ],
               ),
-            ),
+              const SizedBox(height: AppSpacing.labelGap),
+              const Divider(),
+              const SizedBox(height: AppSpacing.labelGap),
 
-            const Divider(),
-            _SidebarItem(
-              title: 'Examination',
-              onTap: () {
-                Navigator.pop(context);
-                context.push('/examination');
-              },
-            ),
-            _SidebarItem(title: 'Schedule',
-            onTap: () {
-              Navigator.pop(context);
-              context.push('/schedule');
-            },),
-            _SidebarItem(
-              title: 'Attendance',
-              onTap: () {
-                Navigator.pop(context);
-                context.push('/attendance');
-              },
-            ),
-            _SidebarItem(
-              title: 'Reports',
-              onTap: () {
-                Navigator.pop(context);
-                context.push('/reports');
-              },
-            ),
+              _SidebarItem(
+                title: 'Examination',
+                onTap: () {
+                  Navigator.pop(context);
+                  context.push('/examination');
+                },
+              ),
+              _SidebarItem(
+                title: 'Schedule',
+                onTap: () {
+                  Navigator.pop(context);
+                  context.push('/schedule');
+                },
+              ),
+              _SidebarItem(
+                title: 'Attendance',
+                onTap: () {
+                  Navigator.pop(context);
+                  context.push('/attendance');
+                },
+              ),
+              _SidebarItem(
+                title: 'Reports',
+                onTap: () {
+                  Navigator.pop(context);
+                  context.push('/reports');
+                },
+              ),
+              const SizedBox(height: AppSpacing.labelGap),
 
-            const Divider(),
+              const Divider(),
+              const SizedBox(height: AppSpacing.labelGap),
 
-            // Settings
-            _SidebarItem(
-              title: 'Settings',
-              onTap: () {
-                Navigator.pop(context);
-                context.push('/settings');
-              },
-            ),
+              _SidebarItem(
+                title: 'Settings',
+                onTap: () {
+                  Navigator.pop(context);
+                  context.push('/settings');
+                },
+              ),
+              const SizedBox(height: AppSpacing.labelGap),
 
-            const Divider(),
+              const Divider(),
+              const SizedBox(height: AppSpacing.labelGap),
 
-            // Bottom 2 links
-            _SidebarItem(title: 'Help'),
-            _SidebarItem(title: 'Logout'),
-          ],
+              _SidebarItem(title: 'Support'),
+              _SidebarItem(title: 'FAQs'),
+            ],
+          ),
         ),
       ),
     );
@@ -88,6 +110,15 @@ class _SidebarItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(title: Text(title), onTap: onTap);
+    return ListTile(
+      contentPadding: EdgeInsets.zero,
+      horizontalTitleGap: 0,
+      dense: true,
+      title: Text(
+        title,
+        style: AppTextStyles.body.copyWith(color: AppColors.subHeading),
+      ),
+      onTap: onTap,
+    );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:my_scheduler/core/constants/spacing.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../models/team_model.dart';
@@ -7,6 +8,8 @@ import '../../../core/utils/color_cycler.dart';
 import '../../../core/constants/colors.dart';
 import '../../../providers/teams_provider.dart';
 import 'chat_bubble.dart';
+import '../../../core/constants/text_styles.dart';
+import '../../../widgets/text_input_field.dart';
 
 class TeamCard extends ConsumerStatefulWidget {
   final Team team;
@@ -72,23 +75,29 @@ class _TeamCardState extends ConsumerState<TeamCard> {
 
     final unreadAsync = ref.watch(unreadCountProvider(widget.team.id));
 
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 250),
-      margin: const EdgeInsets.symmetric(vertical: 10),
+    return Container(
       decoration: BoxDecoration(
-        color: AppColors.background,
-        borderRadius: BorderRadius.circular(16),
+        color: bubbleColor,
+        borderRadius: BorderRadius.circular(AppSpacing.radius),
+        border: Border.all(color: AppColors.subHeading, width: 1),
       ),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          /// ---------------- HEADER ----------------
           InkWell(
             onTap: _toggleExpanded,
             child: Container(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(AppSpacing.pagePadding),
               decoration: BoxDecoration(
                 color: bubbleColor,
-                borderRadius: BorderRadius.circular(16),
+
+                /// 👇 Remove bottom radius when expanded
+                borderRadius: expanded
+                    ? BorderRadius.only(
+                        topLeft: Radius.circular(AppSpacing.radius),
+                        topRight: Radius.circular(AppSpacing.radius),
+                      )
+                    : BorderRadius.circular(AppSpacing.radius),
               ),
               child: Row(
                 children: [
@@ -97,16 +106,16 @@ class _TeamCardState extends ConsumerState<TeamCard> {
                     children: [
                       Text(
                         widget.team.name,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.textPrimary,
+                        style: AppTextStyles.bold.copyWith(
+                          color: AppColors.body,
                         ),
                       ),
-                      const SizedBox(height: 4),
+                      const SizedBox(height: AppSpacing.labelGap),
                       Text(
                         widget.team.category,
-                        style: const TextStyle(color: AppColors.textMuted),
+                        style: AppTextStyles.assist.copyWith(
+                          color: AppColors.subHeading,
+                        ),
                       ),
                     ],
                   ),
@@ -120,21 +129,10 @@ class _TeamCardState extends ConsumerState<TeamCard> {
                         return const SizedBox();
                       }
 
-                      return Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 4,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.black.withOpacity(0.3),
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Text(
-                          '+$count',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
-                          ),
+                      return Text(
+                        '+$count',
+                        style: AppTextStyles.body.copyWith(
+                          color: AppColors.body,
                         ),
                       );
                     },
@@ -146,61 +144,68 @@ class _TeamCardState extends ConsumerState<TeamCard> {
             ),
           ),
 
-          /// ---------------- CHAT ----------------
-          if (expanded) ...[
-            const SizedBox(height: 8),
+          /// ➖ Divider border when expanded
+          if (expanded) Container(height: 1, color: AppColors.subHeading),
 
+          /// 📦 EXPANDED CONTENT
+          if (expanded) ...[
             SizedBox(
               height: 260,
-              child: messagesAsync.when(
-                loading: () => const Center(child: CircularProgressIndicator()),
-                error: (e, _) => Center(child: Text('Error: $e')),
-                data: (messages) {
-                  // ✅ Ensure correct order (oldest → newest)
-                  final sortedMessages = [...messages]
-                    ..sort((a, b) => a.createdAt.compareTo(b.createdAt));
+              child: Container(
+                color: AppColors.superlight, // 🎨 Your background color
+                child: messagesAsync.when(
+                  loading: () =>
+                      const Center(child: CircularProgressIndicator()),
+                  error: (e, _) => Center(child: Text('Error: $e')),
+                  data: (messages) {
+                    final sortedMessages = [...messages]
+                      ..sort((a, b) => a.createdAt.compareTo(b.createdAt));
 
-                  _scrollToBottom();
+                    _scrollToBottom();
 
-                  return ListView.builder(
-                    controller: scrollController,
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                    itemCount: sortedMessages.length,
-                    itemBuilder: (context, index) {
-                      final msg = sortedMessages[index];
+                    return ListView.builder(
+                      controller: scrollController,
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      itemCount: sortedMessages.length,
+                      itemBuilder: (context, index) {
+                        final msg = sortedMessages[index];
 
-                      return ChatBubble(
-                        message: msg.message,
-                        isMe: msg.senderId == currentUserId,
-                        color: bubbleColor,
-                        time: msg.createdAt,
-                      );
-                    },
-                  );
-                },
+                        return ChatBubble(
+                          message: msg.message,
+                          isMe: msg.senderId == currentUserId,
+                          color: bubbleColor,
+                          time: msg.createdAt,
+                        );
+                      },
+                    );
+                  },
+                ),
               ),
             ),
 
-            const Divider(height: 1),
-
-            /// ✍️ Input
-            Padding(
-              padding: const EdgeInsets.all(12),
+            Container(
+              decoration: BoxDecoration(
+                color: AppColors.superlight,
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(AppSpacing.radius),
+                  bottomRight: Radius.circular(AppSpacing.radius),
+                ),
+                border: const Border(
+                  top: BorderSide(color: AppColors.subHeading, width: 1),
+                ),
+              ),
+              padding: const EdgeInsets.all(AppSpacing.cardPadding),
               child: Row(
                 children: [
                   Expanded(
-                    child: TextField(
+                    child: TextInputField(
                       controller: controller,
                       onSubmitted: (_) => _sendMessage(),
-                      decoration: const InputDecoration(
-                        hintText: "Type a message...",
-                      ),
+                      placeholder: "Type a message...",
+                      label: '',
+                      textInputAction: TextInputAction.send,
+                      maxLines: 1,
                     ),
-                  ),
-                  const SizedBox(width: 8),
-                  IconButton(
-                    icon: const Icon(Icons.send),
-                    onPressed: _sendMessage,
                   ),
                 ],
               ),

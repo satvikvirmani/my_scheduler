@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../providers/teams_provider.dart';
 import 'widgets/team_card.dart';
+import '../../core/constants/spacing.dart';
+import '../../widgets/custom_app_bar.dart';
 
 class TeamsScreen extends ConsumerWidget {
   const TeamsScreen({super.key});
@@ -12,9 +14,9 @@ class TeamsScreen extends ConsumerWidget {
     final teamsAsync = ref.watch(myTeamsProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Teams")),
+      appBar: CustomAppBar(title: 'Teams'),
       body: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(AppSpacing.pagePadding),
         child: teamsAsync.when(
           loading: () =>
               const Center(child: CircularProgressIndicator()),
@@ -33,9 +35,14 @@ class TeamsScreen extends ConsumerWidget {
             return ListView.builder(
               itemCount: teams.length,
               itemBuilder: (context, index) {
-                return TeamCard(
-                  team: teams[index],
-                  index: index,
+                return Column(
+                  children: [
+                    TeamCard(
+                      team: teams[index],
+                      index: index,
+                    ),
+                    const SizedBox(height: AppSpacing.pagePadding),
+                  ],
                 );
               },
             );

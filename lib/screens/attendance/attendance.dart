@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../core/constants/colors.dart';
 import '../../core/constants/spacing.dart';
-import '../home/widgets/attendence_chart.dart';
+import 'widgets/attendance_chart.dart';
 import 'widgets/attendance_bar_chart.dart';
 import 'widgets/subject_attendance_card.dart';
 import '../../../providers/attendance_provider.dart';
+import '../../../widgets/custom_app_bar.dart';
 
 class AttendanceScreen extends ConsumerWidget {
   const AttendanceScreen({super.key});
@@ -17,7 +17,7 @@ class AttendanceScreen extends ConsumerWidget {
     final attendances = ref.watch(semesterAttendanceProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Attendance')),
+      appBar: CustomAppBar(title: 'Attendance'),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(AppSpacing.pagePadding),
@@ -27,46 +27,23 @@ class AttendanceScreen extends ConsumerWidget {
               IntrinsicHeight(
                 child: Row(
                   children: [
-                    // Left: Radial chart
+                    AttendanceChartScreen(attendance: overallAttendance),
                     Expanded(
                       child: Container(
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: AppColors.peach,
-                          borderRadius: BorderRadius.circular(
-                            AppSpacing.cardRadius,
-                          ),
-                        ),
-                        child: AttendanceChart(attendance: overallAttendance),
-                      ),
-                    ),
-
-                    const SizedBox(width: 16),
-
-                    // Right: Bar chart
-                    Expanded(
-                      child: Container(
-                        padding: const EdgeInsets.all(2),
-                        decoration: BoxDecoration(
-                          color: AppColors.mint,
-                          borderRadius: BorderRadius.circular(
-                            AppSpacing.cardRadius,
-                          ),
-                        ),
                         child: attendances.when(
                           loading: () => const CircularProgressIndicator(),
                           error: (e, _) => Text('Error: $e'),
                           data: (subjects) => AttendanceBarChart(
                             subjects: subjects,
                           ),
-),
+                        ),
                       ),
                     ),
                   ],
                 ),
               ),
 
-              const SizedBox(height: AppSpacing.sectionGap),
+              const SizedBox(height: 2 * AppSpacing.gap),
 
               attendances.when(
                 loading: () => const Center(child: CircularProgressIndicator()),
@@ -80,7 +57,7 @@ class AttendanceScreen extends ConsumerWidget {
                     children: List.generate(
                       subjects.length,
                       (index) => Padding(
-                        padding: const EdgeInsets.only(bottom: 16),
+                        padding: const EdgeInsets.only(bottom: AppSpacing.gap),
                         child: SubjectAttendanceCard(
                           subject: subjects[index],
                           index: index,

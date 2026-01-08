@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:my_scheduler/core/utils/color_cycler.dart';
 import '../../../core/constants/spacing.dart';
 import '../../../models/report.dart';
+import '../../../core/constants/text_styles.dart';
+import '../../../core/constants/colors.dart';
 
 class SubjectReportCard extends StatelessWidget {
   final SubjectReport subject;
@@ -22,11 +24,11 @@ class SubjectReportCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(AppSpacing.pagePadding),
       width: double.infinity,
       decoration: BoxDecoration(
         color: ColorCycler.byIndex(index),
-        borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
+        borderRadius: BorderRadius.circular(AppSpacing.radius),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -34,40 +36,74 @@ class SubjectReportCard extends StatelessWidget {
           // 📘 Subject name
           Text(
             subject.subjectName,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
+            style: AppTextStyles.body.copyWith(
+              color: AppColors.body,
             ),
           ),
 
-          const SizedBox(height: 8),
+          const SizedBox(height: AppSpacing.labelGap),
 
           // 📝 Theory marks
           if (subject.hasTheory)
-            Text(
-              'Theory: ${subject.theoryScored}/${subject.theoryMax}',
-            )
+            Row(children: [
+              Text(
+                'Theory: ',
+                style: AppTextStyles.assist.copyWith(
+                  color: AppColors.body,
+                ),
+              ),
+              Text(
+                '${subject.theoryScored}/${subject.theoryMax}',
+                style: AppTextStyles.assist.copyWith(
+                  color: AppColors.body,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ])
           else
-            const Text(
+            Text(
               'Theory: N/A',
-              style: TextStyle(color: Colors.black54),
+              style: AppTextStyles.assist.copyWith(
+                color: AppColors.body,
+              ),
             ),
 
           // 🧪 Practical marks (optional)
           if (subject.hasPractical) ...[
-            const SizedBox(height: 4),
-            Text(
-              'Practical: ${subject.practicalScored}/${subject.practicalMax}',
-            ),
+            Row(children: [
+              Text(
+                'Practical: ',
+                style: AppTextStyles.assist.copyWith(
+                  color: AppColors.body,
+                ),
+              ),
+              Text(
+                '${subject.practicalScored}/${subject.practicalMax}',
+                style: AppTextStyles.assist.copyWith(
+                  color: AppColors.body,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],)
           ],
 
           // 🧑‍🏫 Teacher Assessment (only for End Semester)
           if (_showTeacherAssessment) ...[
-            const SizedBox(height: 4),
-            Text(
-              'Teacher Assessment: '
-              '${subject.teacherAssessmentScored}/${subject.teacherAssessmentMax}',
-            ),
+            Row(children: [
+              Text(
+                'Teacher Assessment: ',
+                style: AppTextStyles.assist.copyWith(
+                  color: AppColors.body,
+                ),
+              ),
+              Text(
+                '${subject.teacherAssessmentScored}/${subject.teacherAssessmentMax}',
+                style: AppTextStyles.assist.copyWith(
+                  color: AppColors.body,
+                  fontWeight: FontWeight.w600
+                ),
+              ),
+            ],)
           ],
         ],
       ),

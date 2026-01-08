@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:my_scheduler/widgets/custom_app_bar.dart';
 
 import '../../core/constants/spacing.dart';
 import '../../providers/reports_provider.dart';
 import '../../models/report.dart';
 import 'widgets/subject_report_card.dart';
+import '../../core/constants/text_styles.dart';
+import '../../core/constants/colors.dart';
 
 class DetailedReportScreen extends ConsumerWidget {
   final String semesterId;
@@ -23,7 +26,7 @@ class DetailedReportScreen extends ConsumerWidget {
     final reportsAsync = ref.watch(reportsProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Detailed Report')),
+      appBar: CustomAppBar(title: 'Detailed Report'),
       body: SafeArea(
         child: reportsAsync.when(
           loading: () => const Center(child: CircularProgressIndicator()),
@@ -48,21 +51,20 @@ class DetailedReportScreen extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '$category • ${semester.semesterName}',
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+                    '${semester.semesterName} • $category',
+                    style: AppTextStyles.subheading.copyWith(
+                      color: AppColors.body,
                     ),
                   ),
 
-                  const SizedBox(height: 16),
+                  const SizedBox(height: AppSpacing.gap),
 
                   if (filteredSubjects.isEmpty)
                     const Text('No data available')
                   else
                     ...filteredSubjects.asMap().entries.map(
                       (entry) => Padding(
-                        padding: const EdgeInsets.only(bottom: 16),
+                        padding: const EdgeInsets.only(bottom: AppSpacing.gap),
                         child: SubjectReportCard(
                           subject: entry.value,
                           index: entry.key,

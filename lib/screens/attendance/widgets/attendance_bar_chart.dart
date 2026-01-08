@@ -3,6 +3,8 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 
 import '../../../models/subject_attendance.dart';
 import '../../../core/utils/color_cycler.dart';
+import '../../../core/constants/text_styles.dart';
+import '../../../core/constants/colors.dart';
 
 class AttendanceBarChart extends StatelessWidget {
   final List<SubjectAttendance> subjects;
@@ -27,15 +29,17 @@ class AttendanceBarChart extends StatelessWidget {
         minimum: 0,
         maximum: 100,
         interval: 20,
-        labelFormat: '{value}%',
-        labelStyle: const TextStyle(fontSize: 10),
+        labelFormat: '{value}',
+        labelStyle: AppTextStyles.chart.copyWith(
+          color: AppColors.body,
+        ),
       ),
 
       // Y-axis → CATEGORY (subject codes)
       primaryXAxis: CategoryAxis(
         maximumLabelWidth: 60,
-        labelStyle: const TextStyle(
-          fontSize: 9,
+        labelStyle: AppTextStyles.chart.copyWith(
+          color: AppColors.body,
         ),
       ),
 
@@ -51,12 +55,21 @@ class AttendanceBarChart extends StatelessWidget {
           yValueMapper: (SubjectAttendance data, _) => data.percentage,
 
           width: 0.55, // 👈 slimmer bars
-          spacing: 0, // 👈 tighter columns
+          spacing: 0.1, // 👈 tighter columns
+          borderRadius: BorderRadius.only(
+            topRight: Radius.circular(15),
+            bottomRight: Radius.circular(15),
+          ),
 
-          dataLabelSettings: const DataLabelSettings(
+          dataLabelMapper: (SubjectAttendance data, _) =>
+              data.percentage.toStringAsFixed(2),
+
+          dataLabelSettings: DataLabelSettings(
             isVisible: true,
             labelAlignment: ChartDataLabelAlignment.outer,
-            textStyle: TextStyle(fontSize: 9),
+            textStyle: AppTextStyles.chart.copyWith(
+              color: AppColors.body,
+            ),
           ),
 
           pointColorMapper: (_, index) =>
