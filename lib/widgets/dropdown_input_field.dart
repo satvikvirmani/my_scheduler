@@ -38,19 +38,19 @@ class DropdownInputField<T> extends StatelessWidget {
 
         /// 🔹 Dropdown
         DropdownButtonFormField<T>(
-          value: value,
+          initialValue: value,
           items: items,
           onChanged: onChanged,
           icon: const Icon(Icons.keyboard_arrow_down_rounded),
           hint: placeholder != null ? Text(placeholder!) : null,
-          dropdownColor: Colors.white,
+          dropdownColor: AppColors.superlight,
           style: AppTextStyles.body,
 
           decoration: InputDecoration(
             prefixIcon: prefixIcon != null ? Icon(prefixIcon) : null,
             filled: true,
             fillColor: isDisabled
-                ? AppColors.superlight.withOpacity(0.5)
+                ? AppColors.superlight.withValues(alpha: 0.5)
                 : AppColors.superlight,
 
             border: OutlineInputBorder(

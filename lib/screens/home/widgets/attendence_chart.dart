@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import '../../../core/constants/colors.dart';
+import '../../../core/constants/text_styles.dart';
 import './data_cards/base_card.dart';
 
 class AttendanceChart extends StatelessWidget {
@@ -11,57 +12,57 @@ class AttendanceChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<_ChartData> chartData = [
-      _ChartData('Present', attendance, AppColors.accentOrange),
+      _ChartData('Present', attendance, AppColors.chartTrue),
       _ChartData(
         'Absent',
         1 - attendance,
-        AppColors.textMuted.withOpacity(0.2),
+        AppColors.chartFalse,
       ),
     ];
 
     return BaseCard(
-      color: AppColors.peach,
+      color: AppColors.card4,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Text(
+          Text(
             'Overall Attendance',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+            style: AppTextStyles.body.copyWith(
+              color: AppColors.body,
+            ),
           ),
 
           const SizedBox(height: 16),
 
           SizedBox(
-            width: 140,
-            height: 140,
+            width: 120,
+            height: 120,
             child: SfCircularChart(
               annotations: <CircularChartAnnotation>[
                 CircularChartAnnotation(
-                  widget: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        '${(attendance * 100).toInt()}%',
-                        style: const TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
+                  widget: Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          '${(attendance * 100).toInt()}%',
+                          style: AppTextStyles.heading.copyWith(
+                          color: AppColors.body,
                         ),
-                      ),
-                      const Text(
-                        'Present',
-                        style: TextStyle(fontSize: 12, color: Colors.black54),
-                      ),
+                      )
                     ],
                   ),
                 ),
-              ],
+            )],
               series: <CircularSeries>[
                 DoughnutSeries<_ChartData, String>(
                   dataSource: chartData,
                   xValueMapper: (_ChartData data, _) => data.category,
                   yValueMapper: (_ChartData data, _) => data.value,
                   pointColorMapper: (_ChartData data, _) => data.color,
-                  innerRadius: '70%',
+                  strokeColor: AppColors.body,
+                  strokeWidth: 1.5,
+                  innerRadius: '80%',
                   radius: '100%',
                   dataLabelSettings: const DataLabelSettings(isVisible: false),
                 ),

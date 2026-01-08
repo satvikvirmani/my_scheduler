@@ -3,12 +3,12 @@ import '../constants/colors.dart';
 
 class ColorCycler {
   static const List<Color> _palette = [
-    AppColors.lavender,
-    AppColors.mint,
-    AppColors.peach,
-    AppColors.skyBlue,
-    AppColors.softYellow,
-    AppColors.softPink,
+    AppColors.card1,
+    AppColors.card2,
+    AppColors.card3,
+    AppColors.card4,
+    AppColors.card5,
+    AppColors.card6,
   ];
 
   /// Returns a color based on index, cycling through palette

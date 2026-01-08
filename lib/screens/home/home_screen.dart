@@ -45,8 +45,10 @@ class HomeScreen extends ConsumerWidget {
         ),
         customTitle: Row(
           mainAxisSize: MainAxisSize.min,
-          children: const [
-            Text('myScheduler', style: AppTextStyles.accent),
+          children: [
+            Text('myScheduler', style: AppTextStyles.accent.copyWith(
+              color: AppColors.body,
+            )),
 
             Baseline(
               baseline: 16,

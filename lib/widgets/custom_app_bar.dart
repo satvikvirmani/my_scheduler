@@ -59,7 +59,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       title: customTitle ??
           Text(
             title!,
-            style: AppTextStyles.accent,
+            style: AppTextStyles.accent.copyWith(
+              color: AppColors.body,
+            ),
           ),
     );
   }

@@ -29,7 +29,9 @@ class TextInputField extends StatelessWidget {
         // 🔹 Label Above
         Text(
           label,
-          style: AppTextStyles.assist,
+          style: AppTextStyles.assist.copyWith(
+            color: AppColors.subHeading,
+          ),
         ),
 
         const SizedBox(height: AppSpacing.labelGap),

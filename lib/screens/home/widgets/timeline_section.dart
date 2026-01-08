@@ -3,6 +3,8 @@ import '../../../core/constants/spacing.dart';
 import '../../../core/utils/time_utils.dart';
 import '../../../models/timeline_event.dart';
 import 'timeline_event_card.dart';
+import '../../../core/constants/colors.dart';
+import '../../../core/constants/text_styles.dart';
 
 class TimelineSection extends StatelessWidget {
   const TimelineSection({super.key, required this.events});
@@ -30,10 +32,10 @@ class TimelineSection extends StatelessWidget {
               child: Row(
                 children: [
                   SizedBox(
-                    width: 50,
-                    child: Text('${h.toString().padLeft(2, '0')}:00'),
+                    width: 32,
+                    child: Text('${h.toString().padLeft(2, '0')}:00', style: AppTextStyles.assist.copyWith(color: AppColors.subHeading),),
                   ),
-                  const Expanded(child: Divider()),
+                  const Expanded(child: Divider(color: AppColors.subHeading,)),
                 ],
               ),
             ),
@@ -52,7 +54,7 @@ class TimelineSection extends StatelessWidget {
                 e.start,
                 e.end,
                 AppSpacing.timelineHourHeight,
-              ) + AppSpacing.eventInset,
+              ),
               child: TimelineEventCard(event: e),
             ),
         ],

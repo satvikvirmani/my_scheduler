@@ -51,7 +51,7 @@ class AppTextStyles {
 
   static const bold = TextStyle(
     fontSize: 20,
-    fontWeight: FontWeight.w500,
+    fontWeight: FontWeight.w600,
     height: 1.5,
   );
 
@@ -63,7 +63,7 @@ class AppTextStyles {
 
   static const bodyEmphasis = TextStyle(
     fontSize: 16,
-    fontWeight: FontWeight.w500,
+    fontWeight: FontWeight.w600,
     height: 1.5,
   );
 

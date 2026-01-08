@@ -3,6 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/constants/spacing.dart';
 import 'widgets/examination_card.dart';
 import '../../providers/exam_provider.dart';
+import '../../widgets/custom_app_bar.dart';
+import '../../core/constants/text_styles.dart';
+import '../../core/constants/colors.dart';
 
 class ExaminationScreen extends ConsumerWidget {
   const ExaminationScreen({super.key});
@@ -12,26 +15,24 @@ class ExaminationScreen extends ConsumerWidget {
     final exams = ref.watch(upcomingExamsProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Examination'),
-      ),
+      appBar: CustomAppBar(title: 'Examination'),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.pagePadding),
+          padding: const EdgeInsets.only(
+            left: AppSpacing.pagePadding,
+            right: AppSpacing.pagePadding,
+            bottom: AppSpacing.pagePadding,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
+              Text(
                 'Upcoming',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: AppTextStyles.heading.copyWith(color: AppColors.body),
               ),
 
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSpacing.gap),
 
-              // ✅ ListView gets bounded height via Expanded
               Expanded(
                 child: exams.when(
                   loading: () =>
@@ -48,7 +49,7 @@ class ExaminationScreen extends ConsumerWidget {
                     return ListView.separated(
                       itemCount: examList.length,
                       separatorBuilder: (_, __) =>
-                          const SizedBox(height: 16),
+                          const SizedBox(height: AppSpacing.gap),
                       itemBuilder: (context, index) {
                         return ExamCard(
                           exam: examList[index],

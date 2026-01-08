@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/constants/colors.dart';
+import '../../../core/constants/text_styles.dart';
+import '../../../core/constants/spacing.dart';
 
 class DateHeader extends StatelessWidget {
   const DateHeader({super.key});
@@ -8,21 +10,20 @@ class DateHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      borderRadius: BorderRadius.circular(8),
       onTap: () {
         context.push('/schedule'); // 👈 navigation
       },
       child: Row(
-        children: const [
+        children: [
           Text(
             'Today, ',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            style: AppTextStyles.heading.copyWith(color: AppColors.body),
           ),
           Text(
             '10 July',
-            style: TextStyle(fontSize: 18, color: AppColors.textMuted),
+            style: AppTextStyles.subheading.copyWith(color: AppColors.subHeading),
           ),
-          SizedBox(width: 16)
+          const SizedBox(width: AppSpacing.gap)
         ],
       ),
     );

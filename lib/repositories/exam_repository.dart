@@ -60,7 +60,7 @@ class ExamRepository {
         .eq('section', profile['section'])
         .eq('subsection', profile['subsection'])
         .gte('exam_date', today)
-        .order('exam_date')
+        .order('exam_date', ascending: true)
         .order('start_time');
 
     return (res as List)

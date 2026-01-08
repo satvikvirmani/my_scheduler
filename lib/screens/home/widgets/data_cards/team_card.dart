@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:my_scheduler/core/constants/text_styles.dart';
 import '../../../../core/constants/colors.dart';
+import '../../../../core/constants/spacing.dart';
 import '../../../../providers/teams_provider.dart';
 import 'base_card.dart';
 import '../../../../models/team_model.dart';
@@ -16,34 +18,32 @@ class TeamsCard extends ConsumerWidget {
     return InkWell(
       onTap: () => context.push('/teams'),
       child: BaseCard(
-        color: AppColors.mint,
+        color: AppColors.card2,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+            Text(
               'My Teams',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: AppTextStyles.body.copyWith(color: AppColors.body),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.gap),
 
             teamsAsync.when(
-              loading: () =>
-                  const Center(child: CircularProgressIndicator()),
-              error: (e, _) =>
-                  Text('Error loading teams: $e'),
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (e, _) => Text(
+                'Error loading teams: $e',
+                style: AppTextStyles.assist.copyWith(color: AppColors.body),
+              ),
               data: (teams) {
                 if (teams.isEmpty) {
-                  return const Text(
+                  return Text(
                     'You are not part of any team',
-                    style: TextStyle(color: AppColors.textMuted),
+                    style: AppTextStyles.assist.copyWith(color: AppColors.body),
                   );
                 }
 
-                /// ✅ Use Column instead of ListView (fixes web hit-test crash)
                 return Column(
-                  children: teams
-                      .map((team) => _TeamItem(team: team))
-                      .toList(),
+                  children: teams.map((team) => _TeamItem(team: team)).toList(),
                 );
               },
             ),
@@ -64,24 +64,25 @@ class _TeamItem extends ConsumerWidget {
     final unreadAsync = ref.watch(unreadCountProvider(team.id));
 
     return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.only(bottom: AppSpacing.gap),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             team.category,
-            style: const TextStyle(fontSize: 12, color: AppColors.textMuted),
+            style: AppTextStyles.assist.copyWith(color: AppColors.body),
           ),
           const SizedBox(height: 4),
 
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                team.name,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
+              Expanded(
+                child: Text(
+                  team.name,
+                  softWrap: true,
+                  overflow: TextOverflow.visible,
+                  style: AppTextStyles.bold.copyWith(color: AppColors.body),
                 ),
               ),
 
@@ -90,10 +91,7 @@ class _TeamItem extends ConsumerWidget {
                   if (count == 0) return const SizedBox();
                   return Text(
                     '+$count',
-                    style: const TextStyle(
-                      fontSize: 12,
-                      color: AppColors.textMuted,
-                    ),
+                    style: AppTextStyles.assist.copyWith(color: AppColors.body),
                   );
                 },
                 loading: () => const SizedBox(),

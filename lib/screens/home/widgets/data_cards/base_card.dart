@@ -3,8 +3,6 @@ import '../../../../../core/constants/spacing.dart';
 
 
 class BaseCard extends StatelessWidget {
-
-
   final Color color;
   final Widget child;
 
@@ -14,10 +12,10 @@ class BaseCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(AppSpacing.cardPadding),
       decoration: BoxDecoration(
         color: color,
-        borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
+        borderRadius: BorderRadius.circular(AppSpacing.radius),
       ),
       child: child,
     );
