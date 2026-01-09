@@ -10,10 +10,12 @@ class TextInputField extends StatelessWidget {
   final bool obscureText;
   final IconData? prefixIcon;
   final String? placeholder;
-final ValueChanged<String>? onSubmitted;
-final TextInputAction textInputAction;
-final int maxLines;
-final bool enabled;
+  final ValueChanged<String>? onSubmitted;
+  final TextInputAction textInputAction;
+  final int maxLines;
+  final bool enabled;
+  final bool showSendIcon;
+  final VoidCallback? suffixIconFunc;
 
   const TextInputField({
     super.key,
@@ -27,6 +29,8 @@ final bool enabled;
     this.textInputAction = TextInputAction.done,
     this.maxLines = 1,
     this.enabled = true,
+    this.showSendIcon = false,
+    this.suffixIconFunc,
   });
 
   @override
@@ -38,9 +42,7 @@ final bool enabled;
         if (label.isNotEmpty) ...[
           Text(
             label,
-            style: AppTextStyles.assist.copyWith(
-              color: AppColors.subHeading,
-            ),
+            style: AppTextStyles.assist.copyWith(color: AppColors.subHeading),
           ),
           const SizedBox(height: AppSpacing.labelGap),
         ],
@@ -49,10 +51,11 @@ final bool enabled;
           controller: controller,
           keyboardType: keyboardType,
           obscureText: obscureText,
-            onSubmitted: onSubmitted,
-            enabled: enabled,
-            textInputAction: textInputAction, // ✅
-  maxLines: maxLines,              
+          onSubmitted: onSubmitted,
+          enabled: enabled,
+          textInputAction: textInputAction,
+          maxLines: maxLines,
+          minLines: 1,
           decoration: InputDecoration(
             hintText: placeholder,
             prefixIcon: prefixIcon != null ? Icon(prefixIcon) : null,
@@ -67,7 +70,7 @@ final bool enabled;
                 strokeAlign: BorderSide.strokeAlignInside,
               ),
             ),
-
+            suffixIcon: showSendIcon ? IconButton(icon: Icon(Icons.send), onPressed: suffixIconFunc) : null,
             contentPadding: EdgeInsets.symmetric(
               horizontal: AppSpacing.fieldXPadding,
               vertical: AppSpacing.fieldYPadding,

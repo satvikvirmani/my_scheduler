@@ -204,6 +204,8 @@ class _TeamCardState extends ConsumerState<TeamCard> {
                       placeholder: "Type a message...",
                       label: '',
                       textInputAction: TextInputAction.send,
+                      showSendIcon: true,
+                      suffixIconFunc: _sendMessage,
                       maxLines: 1,
                     ),
                   ),
