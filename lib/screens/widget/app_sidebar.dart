@@ -30,7 +30,7 @@ class AppSidebar extends StatelessWidget {
                 children: [
                   Text(
                     'myScheduler',
-                    style: AppTextStyles.accent.copyWith(color: AppColors.body),
+                    style: AppTextStyles.accent.copyWith(fontSize: 16, color: AppColors.body),
                   ),
                   const SizedBox(width: 6),
                   Baseline(

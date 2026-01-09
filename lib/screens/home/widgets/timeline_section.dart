@@ -32,7 +32,7 @@ class TimelineSection extends StatelessWidget {
               child: Row(
                 children: [
                   SizedBox(
-                    width: 32,
+                    width: 40,
                     child: Text('${h.toString().padLeft(2, '0')}:00', style: AppTextStyles.assist.copyWith(color: AppColors.subHeading),),
                   ),
                   const Expanded(child: Divider(color: AppColors.subHeading,)),
